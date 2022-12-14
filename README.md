@@ -1,4 +1,5 @@
 # Shifumi
 Shifumi by Lucas C. Kevin L. et Kean M.
 
-nice 
+4 objets : HAL, règles, données, index
+les languages : html, css, php, javascript
