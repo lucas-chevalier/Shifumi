@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeu du shifumi</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header class="index_header">
@@ -17,6 +18,7 @@
         </div>
         <form action="#" method="POST" class="index_form">
             <input type="text" name="Nom" placeholder="Entrez un nom" id="" required class="input_basic">
+            <input type="submit" value="Jouer" class="input_valider">
         </form>
         <div class="index_leaderboard">
         </div>
