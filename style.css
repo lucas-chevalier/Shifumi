@@ -7,11 +7,24 @@ body{
 }
 .index_h1{
   font-family: 'Yeon Sung', cursive;
-  padding-left: 45%;
+  text-align: center;
+  margin-top: 60px;
 }
 .index_credits{
-  padding-left: 42%;
+  width: 250px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .index_form{
-  padding-left: 43%;
+  margin-top: 100px;
+  width: 250px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 15px;
+  background-color:rgb(234, 204, 82);
+  box-shadow: 4px 4px 4px rgb(0, 0, 0, 0.4);
+  border-radius: 20px;
+}
+.btn btn-primary{
+  font-family: 'Yeon Sung', cursive;
 }
