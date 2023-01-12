@@ -1,17 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Yeon+Sung&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
 body{
-  background-color: rgb(234, 204, 82);
   font-family: 'Montserrat', Sans-serif;
   width: 100%;
+}
+.shifumi_body{
+  background-color: #EACC52;
 }
 .index_h1{
   font-family: 'Yeon Sung', cursive;
   text-align: center;
   margin-top: 60px;
+  margin-bottom: 30px;
 }
 .index_credits{
-  width: 250px;
+  width: 198px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -21,10 +24,11 @@ body{
   margin-left: auto;
   margin-right: auto;
   padding: 15px;
-  background-color:rgb(234, 204, 82);
+  padding-bottom: 10px;
+  background-color: #C77BFD;
   box-shadow: 4px 4px 4px rgb(0, 0, 0, 0.4);
   border-radius: 20px;
 }
-.btn btn-primary{
-  font-family: 'Yeon Sung', cursive;
+button{
+  font-family: cursive !important;
 }
