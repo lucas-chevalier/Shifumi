@@ -1,5 +1,5 @@
 <?php
-require(".env");
+require __DIR__ ."database/.env";
 $options = [
     PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'", "PDO::ERRMODE_EXCEPTION"
   ];
