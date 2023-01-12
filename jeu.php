@@ -18,6 +18,7 @@
 echo $hostname;
 $dbh = new PDO("mysql:host=$hostname;dbname=$dbname", $dbuser, $dbpass);
 */
+include "./database/pdo.php";
 $rep_bot = '2';
 $rep_bot = '0';
 $rep_user = '0';
@@ -47,7 +48,7 @@ elseif ($rep_user > $rep_bot) {
 }
 elseif ($rep_user == $rep_bot) {
   ?>
-  Egualité
+  Egalité
   <?php
 }
 
