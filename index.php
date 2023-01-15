@@ -26,13 +26,13 @@ require "./database/pdo.php"; // Inclusion du script qui fait la connexion à la
         <form action="#" method="POST" class="index_form"> <!-- le formulaire avec le nom d'utilisateur (classes bizarres = bootstrap) -->
         <div class="mb-3">
             <label for="exampleInputEmail1" class="form-label">Nom d'utilisateur</label>
-            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="Nom">
+            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="Nom" require>
             <div id="emailHelp" class="form-text"></div>
         <button type="submit" class="btn btn-primary" href="jeu.php">Jouer</button>
         <!-- ------====== Partie PHP/SQL ======------ -->
         <?php
         $nom = $_POST["Nom"]; // Récupération du nom d'utilisateur
-        $sth = $dbh->prepare("INSERT INTO utilisateur (Nom) VALUES(:Nom)"); // Préparation de la requête SQL
+        $sth = $dbh->prepare("INSERT INTO utilisateurs (Nom) VALUES(:Nom)"); // Préparation de la requête SQL
         $traitement = $sth->execute(['Nom' => $nom]); // Execution de la requête
         ?>
         <input type="hidden" id="traitement" value=<?php echo $traitement; ?>/> <!-- Type hidden pour que la variable traitement soit accessible pour le JS -->
