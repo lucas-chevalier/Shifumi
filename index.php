@@ -11,7 +11,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="images/icone.ico">
 </head>
 <?php
-require "./database/pdo.php"; // Inclusion du script qui fait la connexion à la bdd
+require './database/pdo.php'; // Inclusion du script qui fait la connexion à la bdd
 ?>
 <body class="shifumi_body">
     <header class="index_header"> <!-- header à ajouter dans le futur -->
@@ -28,21 +28,57 @@ require "./database/pdo.php"; // Inclusion du script qui fait la connexion à la
             <label for="exampleInputEmail1" class="form-label">Nom d'utilisateur</label>
             <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="Nom" require>
             <div id="emailHelp" class="form-text"></div>
-        <button type="submit" class="btn btn-primary" href="jeu.php">Jouer</button>
+            <button type="submit" class="btn btn-primary">Jouer</button>
+        </div>
         <!-- ------====== Partie PHP/SQL ======------ -->
         <?php
-        $nom = $_POST["Nom"]; // Récupération du nom d'utilisateur
-        $sth = $dbh->prepare("INSERT INTO utilisateurs (Nom) VALUES(:Nom)"); // Préparation de la requête SQL
-        $traitement = $sth->execute(['Nom' => $nom]); // Execution de la requête
+        if (isset($nom)) {
+            $nom = $_POST["Nom"]; // Récupération du nom d'utilisateur
+            if (preg_match('#^[a-zA-Z0-9]$#isU', $nom)) { // Vérifie que le nom ne comporte pas de charactères spéciaux
+                $sth = $dbh->prepare("SELECT nom FROM utilisateurs WHERE nom LIKE '$nom';"); // Préparation de la requête SQL qui regarde si le nom existe ou pas
+                $sth->setFetchMode(PDO::FETCH_NUM);
+                $traitement = $sth->execute(); // Execution de la requête
+                $resultat->fetchAll(); // Récupère le résultat de la requête
+                if ($resultat['nom'] != $nom) {
+                    $ip = $_SERVER['REMOTE_ADDR'];
+                    $sth = $dbh->prepare("INSERT INTO utilisateurs (Nom, Adresse IP) VALUES(:Nom :Adresse IP);"); // Préparation de la requête SQL insérant le nom entré par l'utilisateur
+                    $traitement = $sth->execute(['Nom' => $nom, 'Adresse IP' => $ip]); // Execution de la requête
+                    if (!$traitement) { // En cas d'erreur on affiche les détails de pourquoi ça à planté
+                        print_r($statement->errorInfo());
+                        ?><script>alert("Une erreur est survenue.")</script><?php
+                    }
+                    else {
+                        session_start();
+                        $_SESSION = array();
+                        $_SESSION["nom"] = $nom;
+                        header('jeu.php');
+                    }
+                }
+            else {
+                ?><script>alert("Veuillez entrer un nom correct (a-z, A-Z, 0-9).");</script><?php
+                }
+            }
+        }
         ?>
-        <input type="hidden" id="traitement" value=<?php echo $traitement; ?>/> <!-- Type hidden pour que la variable traitement soit accessible pour le JS -->
         </form>
+        <div class="index_tableau_scores">
+            <?php
+            $sth = $dbh->prepare("SELECT nom, score_utilisateur, nombre_parties FROM utilisateurs GROUP BY score_utilisateur LIMIT 5");
+            $sth->execute();
+            $resultat = $sth->fetchAll();
+            foreach($resultat as $tableau_scores){
+                //$tableau_scores = $resultat[$i]; 
+                $ratio_joueur = $tableau_scores['score_utilisateur']/$tableau_scores['nombre_parties'];?>
+                <h2 class="tableau_h2"></h2>
+                <ol>
+                    <li>
+                        <p><?= $tableau_scores['nom']?></p>
+                        <p><?= $ratio_joueur?></p>
+                    </li>
+                </ol> <?php
+            }
+            ?>
+        </div>
     </section>
-    <script src="etat_connexion.js"></script> <!-- Liaison de notre script javascript qui envoie une alerte en cas d'échec de connexion -->
-    <?php
-    if(!$traitement){ // En cas d'erreur on affiche les détails de pourquoi ça à planté
-        print_r($statement->errorInfo());
-      }
-    ?>
 </body>
 </html>
