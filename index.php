@@ -67,7 +67,6 @@ require './database/pdo.php'; // Inclusion du script qui fait la connexion à la
             $sth->execute();
             $resultat = $sth->fetchAll();
             foreach($resultat as $tableau_scores){
-                //$tableau_scores = $resultat[$i]; 
                 $ratio_joueur = $tableau_scores['score_utilisateur']/$tableau_scores['nombre_parties'];?>
                 <h2 class="tableau_h2"></h2>
                 <ol>
