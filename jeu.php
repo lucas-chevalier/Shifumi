@@ -1,23 +1,26 @@
 <?php
 session_start();
 include "./database/pdo.php";
+$_SESSION["nom"] = "jak";
 const PIERRE = 1;
 const CISEAUX = 2;
 const FEUILLE = 3;
 $nom = $_SESSION["nom"];
 $sth = $dbh->prepare("SELECT nombre_parties FROM utilisateurs WHERE nom = '$nom';");
 $sth->execute();
-$nb_partie = $sth->fetchAll();
+$n_partie = $sth->fetchAll();
+list($nb_partie) = $n_partie[0];
 
 $sth = $dbh->prepare("SELECT score_utilisateur FROM utilisateurs WHERE nom = '$nom';");
 $sth->execute();
-$score_user = $sth->fetchAll();
+$s_user = $sth->fetchAll();
+list($score_user) = $s_user[0];
 
 $sth = $dbh->prepare("SELECT score_hal FROM utilisateurs WHERE nom = '$nom';");
 $sth->execute();
-$score_hal = $sth->fetchAll();
-
-
+$s_hal = $sth->fetchAll();
+list($score_hal) = $s_hal[0];
+echo $score_user;
 
 ?>
 
@@ -36,13 +39,17 @@ $score_hal = $sth->fetchAll();
 
 
 <?php
-$nb_jeux=$_GET;
 
-$_SESSION["jeux_humain"][$nb_jeux];
-require 'HAL.php';
+
+
 
 
 if ($_GET != NULL) { //Jeu du shifumi
+  
+  require 'HAL.php';
+  $rep_bot = $_SESSION['HAL'];
+  $rep_user = $_GET;
+
   if ($rep_user == 3 && $rep_bot == 1) {
     ?>
     Victoire
@@ -68,11 +75,18 @@ if ($_GET != NULL) { //Jeu du shifumi
     <?php
   }
   $nb_partie = $nb_partie + 1;
-  $statement = $pdo->prepare("UPDATE FROM utilisateur SET score_utilisateur ='$nb_partie', nombre_parties ='$nb_partie', nombre_parties ='$nb_partie' WHERE ID = '$id'"); 
+  echo $nb_partie;
+  $statement = $dbh->prepare("UPDATE utilisateurs SET score_utilisateur = $score_user, score_hal = $score_hal, nombre_parties = $nb_partie WHERE nom = '$nom'");
   
   $traitement = $statement->execute();
+  if(!$traitement) {
+    var_dump($statement->errorInfo());
+  }
 }
-//Comportement du bot HAL
+  else {
+  $_SESSION['nb_jeux'] = 0;
+}
+
 
 
 
