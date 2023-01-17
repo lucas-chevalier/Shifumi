@@ -32,14 +32,26 @@ require './database/pdo.php'; // Inclusion du script qui fait la connexion à la
         </div>
         <!-- ------====== Partie PHP/SQL ======------ -->
         <?php
-        if (isset($nom)) {
+        $token = bin2hex(random_bytes(32)); // Génère un jeton CSRF pour éviter les attaques CSRF
+        session_start();
+        $_SESSION['token'] = $token;
+        if (isset($nom)) { // Attends que le nom soit rempli avant d'éxecuter la suite
             $nom = $_POST["Nom"]; // Récupération du nom d'utilisateur
-            if (preg_match('#^[a-zA-Z0-9]$#isU', $nom)) { // Vérifie que le nom ne comporte pas de charactères spéciaux
-                $sth = $dbh->prepare("SELECT nom FROM utilisateurs WHERE nom LIKE '$nom';"); // Préparation de la requête SQL qui regarde si le nom existe ou pas
+            if (!isset($_SESSION['token']) || !isset($_POST['token']) || $_SESSION['token'] !== $_POST['token']) { // Vérifie que l'utilisateur possède le bon jeton CSRF
+                die('Erreur: Jeton CSRF invalide');
+            }
+            if (preg_match('/^[a-zA-Z0-9]*$/', $nom)) { // Vérifie que le nom ne comporte pas de charactères spéciaux
+                $sth = $dbh->prepare("SELECT nom FROM utilisateurs WHERE nom = :nom"); // Préparation de la requête SQL qui regarde si le nom existe ou pas
+                $sth->execute(array(':nom' => $nom));
                 $sth->setFetchMode(PDO::FETCH_NUM);
                 $traitement = $sth->execute(); // Execution de la requête
                 $resultat->fetchAll(); // Récupère le résultat de la requête
-                if ($resultat['nom'] != $nom) {
+                if ($resultat->rowCount() == 1) {
+                    $_SESSION['nom'] = $nom;
+                    $_SESSION = array();
+                    $_SESSION["nom"] = $nom;
+                    header('./jeu.php');
+                } else {
                     $ip = $_SERVER['REMOTE_ADDR'];
                     $sth = $dbh->prepare("INSERT INTO utilisateurs (Nom, Adresse IP) VALUES(:Nom :Adresse IP);"); // Préparation de la requête SQL insérant le nom entré par l'utilisateur
                     $traitement = $sth->execute(['Nom' => $nom, 'Adresse IP' => $ip]); // Execution de la requête
@@ -47,36 +59,44 @@ require './database/pdo.php'; // Inclusion du script qui fait la connexion à la
                         print_r($statement->errorInfo());
                         ?><script>alert("Une erreur est survenue.")</script><?php
                     }
-                    else {
-                        session_start();
-                        $_SESSION = array();
-                        $_SESSION["nom"] = $nom;
-                        header('jeu.php');
-                    }
                 }
+            }
             else {
-                ?><script>alert("Veuillez entrer un nom correct (a-z, A-Z, 0-9).");</script><?php
-                }
+                ?><script>alert("Seuls les caractères alphanumériques sont autorisés");</script><?php
+                exit;
             }
         }
         ?>
+        <input type="hidden" name="jetonCSRF" value="'.$token.'">
         </form>
         <div class="index_tableau_scores">
             <?php
             $sth = $dbh->prepare("SELECT nom, score_utilisateur, nombre_parties FROM utilisateurs GROUP BY score_utilisateur LIMIT 5");
             $sth->execute();
             $resultat = $sth->fetchAll();
+            $i = 1;
+            ?>
+            <h2 class="tableau_h2">Meilleurs joueurs</h2>
+            <table class="tableau_des_scores">
+                <tr>
+                    <th>Rang</th>
+                    <th>Joueur</th>
+                    <th>Ratio</th>
+                </tr>
+            <?php
             foreach($resultat as $tableau_scores){
-                $ratio_joueur = $tableau_scores['score_utilisateur']/$tableau_scores['nombre_parties'];?>
-                <h2 class="tableau_h2"></h2>
-                <ol>
-                    <li>
-                        <p><?= $tableau_scores['nom']?></p>
-                        <p><?= $ratio_joueur?></p>
-                    </li>
-                </ol> <?php
+                $ratio_joueur = $tableau_scores['score_utilisateur']/$tableau_scores['nombre_parties'];
+                ?>
+                <tr>
+                    <td><?= $i?></td>
+                    <td><?= $tableau_scores['nom']?></td>
+                    <td><?= $ratio_joueur?></td>
+                </tr>
+                <?php
+                $i++;
             }
             ?>
+            </table>
         </div>
     </section>
 </body>
