@@ -48,7 +48,7 @@ if ($_GET != NULL) { //Jeu du shifumi
   
   require 'HAL.php';
   $rep_bot = $_SESSION['HAL'];
-  $rep_user = $_GET;
+  $rep_user = $_GET['rep'];
 
   if ($rep_user == 3 && $rep_bot == 1) {
     ?>
@@ -75,7 +75,6 @@ if ($_GET != NULL) { //Jeu du shifumi
     <?php
   }
   $nb_partie = $nb_partie + 1;
-  echo $nb_partie;
   $statement = $dbh->prepare("UPDATE utilisateurs SET score_utilisateur = :score_utilisateur, score_hal = :score_hal, nombre_parties = :nombre_parties WHERE nom = ':nom'");
   $traitement = $statement->execute(['nom' => $nom, 'score_utilisateur' => $score_user, 'score_hal' => $score_hal, 'nombre_parties' => $nb_partie]);
   if(!$traitement) {
