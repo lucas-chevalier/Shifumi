@@ -42,7 +42,7 @@ require './database/pdo.php'; // Inclusion du script qui fait la connexion à la
             }
             if (preg_match('/^[a-zA-Z0-9]*$/', $nom)) { // Vérifie que le nom ne comporte pas de charactères spéciaux
                 $sth = $dbh->prepare("SELECT nom FROM utilisateurs WHERE nom = :nom"); // Préparation de la requête SQL qui regarde si le nom existe ou pas
-                $sth->execute(array(':nom' => $nom));
+                $sth->execute(['nom' => $nom]);
                 $sth->setFetchMode(PDO::FETCH_NUM);
                 $traitement = $sth->execute(); // Execution de la requête
                 $resultat->fetchAll(); // Récupère le résultat de la requête
@@ -52,10 +52,10 @@ require './database/pdo.php'; // Inclusion du script qui fait la connexion à la
                     $_SESSION["nom"] = $nom;
                     header('./jeu.php');
                 } else {
-                    $ip = $_SERVER['REMOTE_ADDR'];
-                    $sth = $dbh->prepare("INSERT INTO utilisateurs (Nom, Adresse IP) VALUES(:Nom :Adresse IP);"); // Préparation de la requête SQL insérant le nom entré par l'utilisateur
-                    $traitement = $sth->execute(['Nom' => $nom, 'Adresse IP' => $ip]); // Execution de la requête
-                    if (!$traitement) { // En cas d'erreur on affiche les détails de pourquoi ça à planté
+                    $ip = $_SERVER['REMOTE_ADDR']; // Récupère l'adresse ip du client
+                    $sth = $dbh->prepare("INSERT INTO utilisateurs (Nom, Adresse IP) VALUES(:Nom :Adresse IP);"); // Préparation de la requête SQL insérant le nom entré par l'utilisateur et son ip
+                    $traitement = $sth->execute(['Nom' => $nom, ':Adresse IP' => $ip]); // Execution de la requête
+                    if (!$traitement) { // En cas d'erreur on affiche les détails de pourquoi ça à planté et on en informe le client
                         print_r($statement->errorInfo());
                         ?><script>alert("Une erreur est survenue.")</script><?php
                     }
@@ -67,7 +67,7 @@ require './database/pdo.php'; // Inclusion du script qui fait la connexion à la
             }
         }
         ?>
-        <input type="hidden" name="jetonCSRF" value="'.$token.'">
+        <input type="hidden" name="jetonCSRF" value="'.$token.'"> <!-- On stocke le jeton CSRF dans le formulaire en caché -->
         </form>
         <div class="index_tableau_scores">
             <?php

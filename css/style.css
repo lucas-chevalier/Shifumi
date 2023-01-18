@@ -4,8 +4,8 @@ body{
   font-family: 'Montserrat', Sans-serif;
   width: 100%;
 }
-.shifumi_body{
-  background-color: #EACC52;
+body{
+  background-color: #EACC52 !important;
 }
 .index_h1{
   font-family: 'Yeon Sung', cursive;
@@ -52,4 +52,26 @@ button{
 .tableau_des_scores{
   display: table; 
   width: 100%;
+  text-align: center;
+}
+.jeu_form{
+  margin-top: 80px;
+}
+.jeu_bouton{
+  margin-top: 30px;
+  font-family: 'Yeon Sung', cursive;
+  font-size: xx-large;
+  display: block;
+  margin-left: 20%;
+  margin-right: 20%;
+  background-color: #C77BFD;
+}
+.jeu_form_img{
+  width: 17%;
+}
+.jeu_form_valider{
+  background-color: #0d6efd;
+}
+.jeu_form_valider:hover{
+  
 }
