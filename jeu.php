@@ -96,19 +96,25 @@ if ($_GET != NULL) { //Jeu du shifumi
 <!-- Partie HTML -->
     <form action="#" method="post" class="jeu_form"> <!-- Le contenu de mon formulaire -->
       <div class="jeu_bouton">
-        <input type="radio" name="choix_joueur" value="pierre" id="pierre" class="jeu_input_radio"> <!-- Je me suis permis de remplacer ce que tu avais fait pour que ça colle avec le css -->
-          <label for="pierre" class="jeu_label">Pierre</label>
-          <img src="images\fist.png" alt="Pierre" class="jeu_form_img"/>
+        <input type="radio" name="choix_joueur" value="pierre" id="pierre" class="jeu_input_radio">
+        <br>
+        <img src="images\fist.png" alt="Pierre" class="jeu_form_img"/>
+        <br> <!-- Je me suis permis de remplacer ce que tu avais fait pour que ça colle avec le css -->
+        <label for="pierre" class="jeu_label">Pierre</label>
       </div>
       <div class="jeu_bouton">
         <input type="radio" name="choix_joueur" value="feuille" id="feuille" class="jeu_input_radio">
-          <label for="feuille" class="jeu_label">Feuille</label>
-          <img src="images\hand.png" alt="Feuille" class="jeu_form_img"/>
+        <br>
+        <img src="images\hand.png" alt="Feuille" class="jeu_form_img"/>
+        <br>
+        <label for="feuille" class="jeu_label">Feuille</label>
       </div>
       <div class="jeu_bouton">
         <input type="radio" name="choix_joueur" value="ciseaux" id="ciseaux" class="jeu_input_radio">
-          <label for="ciseaux" class="jeu_label">Ciseaux</label>
-          <img src="images\scissors.png" alt="Ciseaux" class="jeu_form_img"/>
+        <br>
+        <img src="images\scissors.png" alt="Ciseaux" class="jeu_form_img"/>
+        <br>
+        <label for="ciseaux" class="jeu_label">Ciseaux</label>
         </div>
       <input type="submit" name="reponse_joueur" value="Je valide mon choix" class="jeu_form_valider">
     </form>
