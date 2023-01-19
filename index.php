@@ -33,7 +33,7 @@ session_start();
             $token = $_SESSION['token'];
         }
         ?>
-        <form action="jeu.php" method="POST" class="index_form"> <!-- le formulaire avec le nom d'utilisateur (classes bizarres = bootstrap) -->
+        <form action="" method="POST" class="index_form"> <!-- le formulaire avec le nom d'utilisateur (classes bizarres = bootstrap) -->
         <input type="hidden" name="token" value="<?= $token; ?>"> <!-- On stocke le jeton CSRF dans le formulaire en caché -->
         <div class="mb-3">
             <label for="exampleInputEmail1" class="form-label">Nom d'utilisateur</label>
@@ -60,29 +60,29 @@ session_start();
                     print_r($sth->errorInfo());
                     ?><script>alert("Une erreur est survenue.")</script><?php
                 }
-                if ($sth->rowCount() >= 1) {
-                    $_SESSION['nom'] = $nom;
+                    if ($sth->rowCount() >= 1) {
                     $_SESSION = array();
-                    $_SESSION["nom"] = $nom;
-                    header('jeu.php');
-                }
-                else {
-                    $ip = $_SERVER['REMOTE_ADDR']; // Récupère l'adresse ip du client
-                    $sth = $dbh->prepare("INSERT INTO utilisateurs (nom, adresse_ip) VALUES(:nom, :adresse_ip);"); // Préparation de la requête SQL insérant le nom entré par l'utilisateur et son ip
-                    $traitement = $sth->execute(['nom' => $nom, 'adresse_ip' => $ip]); // Execution de la requête
-                    if (!$traitement) { // En cas d'erreur on affiche les détails de pourquoi ça à planté et on en informe le client
-                        print_r($sth->errorInfo());
-                        ?><script>alert("Une erreur est survenue.")</script><?php
-                    } else {
-                        header('jeu.php');
+                    $_SESSION['nom'] = $nom;
+                    header('Location: ./jeu.php');
                     }
+                    else {
+                            $ip = $_SERVER['REMOTE_ADDR']; // Récupère l'adresse ip du client
+                            $sth = $dbh->prepare("INSERT INTO utilisateurs (nom, score_utilisateur, score_hal, nombre_parties, adresse_ip) VALUES(:nom, :score_utilisateur, :score_hal, :nombre_parties,:adresse_ip);"); // Préparation de la requête SQL insérant le nom entré par l'utilisateur et son ip
+                            $traitement = $sth->execute(['nom' => $nom, 'score_utilisateur' => 0, 'score_hal' => 0, 'nombre_parties' => 0, 'adresse_ip' => $ip]); // Execution de la requête
+                            if (!$traitement) { // En cas d'erreur on affiche les détails de pourquoi ça à planté et on en informe le client
+                                print_r($sth->errorInfo());
+                                ?><script>alert("Une erreur est survenue.")</script><?php
+                            } else {
+                                $_SESSION = array();
+                                $_SESSION['nom'] = $nom;
+                                header('Location: ./jeu.php');
+                            }
+                        }
                 }
-                print_r($sth->errorInfo());
             }
             else {
                 ?><script>alert("Seuls les caractères alphanumériques sont autorisés");</script><?php
             }
-        }
         ?>
         </form>
         <div class="index_tableau_scores">
