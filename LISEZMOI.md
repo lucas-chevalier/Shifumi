@@ -1,8 +1,14 @@
 # Shifumi
 Shifumi by Lucas C. Kevin L. et Kean M.
 
-4 objets : HAL, règles, données, index
-les languages : html, css, php, javascript
+les languages : HTML5, CSS3, PHP, JavaScript, SQL
+
+- index.php - by Kévin
+- jeu.php - by Lucas
+- pdo.php - by Kévin
+- HAL.hpp - by Kean
+- style.css - by Kévin
+- shifumi.sql - by Kean
 
 -------======= INSTALLATION =======-------
 
