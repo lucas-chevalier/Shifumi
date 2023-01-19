@@ -3,12 +3,12 @@ Shifumi by Lucas C. Kevin L. et Kean M.
 
 les languages : HTML5, CSS3, PHP, JavaScript, SQL
 
-- ```**index.php``` - by **Kévin**
-- ```**jeu.php``` - by **Lucas**
-- ```**pdo.php``` - by **Kévin**
-- ```**HAL.hpp``` - by **Kean**
-- ```**style.css``` - by **Kévin**
-- ```**shifumi.sql``` - by **Kean**
+- ```index.php``` - by **Kévin**
+- ```jeu.php``` - by **Lucas**
+- ```pdo.php``` - by **Kévin**
+- ```HAL.hpp``` - by **Kean**
+- ```style.css``` - by **Kévin**
+- ```shifumi.sql``` - by **Kean**
 -------======= INSTALLATION =======-------
 
 Pour commencer, veuillez renommer le fichier .env.sample en .env,
