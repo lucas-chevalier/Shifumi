@@ -26,7 +26,7 @@ require './database/pdo.php'; // Inclusion du script qui fait la connexion à la
         <form action="#" method="POST" class="index_form"> <!-- le formulaire avec le nom d'utilisateur (classes bizarres = bootstrap) -->
         <div class="mb-3">
             <label for="exampleInputEmail1" class="form-label">Nom d'utilisateur</label>
-            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="Nom" require>
+            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="nom" require>
             <div id="emailHelp" class="form-text"></div>
             <button type="submit" class="btn btn-primary">Jouer</button>
         </div>
@@ -34,36 +34,49 @@ require './database/pdo.php'; // Inclusion du script qui fait la connexion à la
         <?php
         $token = bin2hex(random_bytes(32)); // Génère un jeton CSRF pour éviter les attaques CSRF
         session_start();
+        $nom = $_POST["nom"]; // Récupération du nom d'utilisateur
         $_SESSION['token'] = $token;
         if (isset($nom)) { // Attends que le nom soit rempli avant d'éxecuter la suite
-            $nom = $_POST["Nom"]; // Récupération du nom d'utilisateur
+            echo "boucle 1", $nom, $ip;
             if (!isset($_SESSION['token']) || !isset($_POST['token']) || $_SESSION['token'] !== $_POST['token']) { // Vérifie que l'utilisateur possède le bon jeton CSRF
                 die('Erreur: Jeton CSRF invalide');
+                echo "boucle 2", $nom, $ip;
             }
             if (preg_match('/^[a-zA-Z0-9]*$/', $nom)) { // Vérifie que le nom ne comporte pas de charactères spéciaux
                 $sth = $dbh->prepare("SELECT nom FROM utilisateurs WHERE nom = :nom"); // Préparation de la requête SQL qui regarde si le nom existe ou pas
                 $sth->execute(['nom' => $nom]);
-                $sth->setFetchMode(PDO::FETCH_NUM);
+                $sth->setFetchAll(); // récupère le résultat de la requête et le stocke dans un tableau
                 $traitement = $sth->execute(); // Execution de la requête
-                $resultat->fetchAll(); // Récupère le résultat de la requête
-                if ($resultat->rowCount() == 1) {
+                echo "boucle 3", $nom, $ip;
+                if($traitement){
+                    $resultat->fetchAll(); // Récupère le résultat de la requête
+                    echo "boucle 4", $nom, $ip;
+                }
+                else { // En cas d'erreur on affiche les détails de pourquoi ça à planté et on en informe le client
+                    print_r($sth->errorInfo());
+                    ?><script>alert("Une erreur est survenue.")</script><?php
+                }
+                if ($resultat->rowCount() >= 1) {
                     $_SESSION['nom'] = $nom;
                     $_SESSION = array();
                     $_SESSION["nom"] = $nom;
                     header('./jeu.php');
-                } else {
+                    echo "boucle 5", $nom, $ip;
+                } 
+                else {
                     $ip = $_SERVER['REMOTE_ADDR']; // Récupère l'adresse ip du client
-                    $sth = $dbh->prepare("INSERT INTO utilisateurs (Nom, Adresse IP) VALUES(:Nom :Adresse IP);"); // Préparation de la requête SQL insérant le nom entré par l'utilisateur et son ip
-                    $traitement = $sth->execute(['Nom' => $nom, ':Adresse IP' => $ip]); // Execution de la requête
+                    $sth = $dbh->prepare("INSERT INTO utilisateurs (nom, adresse_ip) VALUES(:nom, :adresse_ip);"); // Préparation de la requête SQL insérant le nom entré par l'utilisateur et son ip
+                    $traitement = $sth->execute(['nom' => $nom, 'adresse_ip' => $ip]); // Execution de la requête
                     if (!$traitement) { // En cas d'erreur on affiche les détails de pourquoi ça à planté et on en informe le client
-                        print_r($statement->errorInfo());
+                        print_r($sth->errorInfo());
                         ?><script>alert("Une erreur est survenue.")</script><?php
+                        echo "boucle 6", $nom, $ip;
                     }
                 }
+                print_r($sth->errorInfo());
             }
             else {
                 ?><script>alert("Seuls les caractères alphanumériques sont autorisés");</script><?php
-                exit;
             }
         }
         ?>
