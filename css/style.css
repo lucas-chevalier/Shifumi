@@ -79,18 +79,31 @@ button{
 .jeu_form_img{
   width: 40%;
 }
-.jeu_form_valider{
-  margin-top: 30px;
-  color: #fff;
-  background-color: #0D6EFD;
-  width: 20%;
-  transition: 0.3s;
-  box-shadow: 4px 4px 4px rgb(0, 0, 0, 0.4);
-  border-radius: 5px;
-  border: 0px;
-  margin-left: 40%;
-  font-family: cursive;
+@media (max-width: 730px) and (orientation){
+  .jeu_form_valider{
+    margin-top: 30px;
+    color: #fff;
+    background-color: #0D6EFD;
+    width: 40%;
+    transition: 0.3s;
+    box-shadow: 4px 4px 4px rgb(0, 0, 0, 0.4);
+    border-radius: 5px;
+    border: 0px;
+    margin-left: 30%;
+  }
 }
+@media (min-width: 730px){
+  .jeu_form_valider{
+    margin-top: 30px;
+    color: #fff;
+    background-color: #0D6EFD;
+    width: 20%;
+    transition: 0.3s;
+    box-shadow: 4px 4px 4px rgb(0, 0, 0, 0.4);
+    border-radius: 5px;
+    border: 0px;
+    margin-left: 40%;
+  }
 .jeu_form_valider:hover{
   background-color: #0B5ED7;
 }
