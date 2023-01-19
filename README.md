@@ -1,15 +1,20 @@
 # Shifumi
 Shifumi by Lucas C. Kevin L. et Kean M.
 
+Affrontez Hal, notre bot dans un jeu de shifumi incroyable !
+
 les languages : HTML5, CSS3, PHP, JavaScript, SQL
 
-- ```index.php``` - by **Kévin**
-- ```jeu.php``` - by **Lucas**
-- ```pdo.php``` - by **Kévin**
-- ```HAL.hpp``` - by **Kean**
-- ```style.css``` - by **Kévin**
-- ```shifumi.sql``` - by **Kean**
--------======= INSTALLATION =======-------
+---=== SHIFUMI ===---
+
+- ```index.php``` - by **Kévin** est la page d'acceuil de notre projet
+- ```jeu.php``` - by **Lucas** est la page sur laquelle on joue au shifumi
+- ```pdo.php``` - by **Kévin** est la page de connexion à la base de données
+- ```HAL.hpp``` - by **Kean** est la page contenant la logique de hal
+- ```style.css``` - by **Kévin** est notre fichier css
+- ```shifumi.sql``` - by **Kean** est notre base de données
+
+---=== INSTALLATION ===---
 
 Pour commencer, veuillez renommer le fichier .env.sample en .env,
 
