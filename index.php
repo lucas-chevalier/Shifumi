@@ -33,7 +33,7 @@ session_start();
             $token = $_SESSION['token'];
         }
         ?>
-        <form action="#" method="POST" class="index_form"> <!-- le formulaire avec le nom d'utilisateur (classes bizarres = bootstrap) -->
+        <form action="jeu.php" method="POST" class="index_form"> <!-- le formulaire avec le nom d'utilisateur (classes bizarres = bootstrap) -->
         <input type="hidden" name="token" value="<?= $token; ?>"> <!-- On stocke le jeton CSRF dans le formulaire en caché -->
         <div class="mb-3">
             <label for="exampleInputEmail1" class="form-label">Nom d'utilisateur</label>
@@ -64,7 +64,7 @@ session_start();
                     $_SESSION['nom'] = $nom;
                     $_SESSION = array();
                     $_SESSION["nom"] = $nom;
-                    header('./jeu.php');
+                    header('jeu.php');
                 }
                 else {
                     $ip = $_SERVER['REMOTE_ADDR']; // Récupère l'adresse ip du client
@@ -74,7 +74,7 @@ session_start();
                         print_r($sth->errorInfo());
                         ?><script>alert("Une erreur est survenue.")</script><?php
                     } else {
-                        header('./jeu.php');
+                        header('jeu.php');
                     }
                 }
                 print_r($sth->errorInfo());
