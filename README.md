@@ -16,7 +16,7 @@ les languages : HTML5, CSS3, PHP, JavaScript, SQL
 
 ---=== INSTALLATION ===---
 
-Pour commencer, vous aurez besoin d'un serveur (wamp/mamp/lamp etc...),
+Pour commencer, vous aurez besoin d'un serveur web (wamp/mamp/lamp etc...),
 
 Ensuite, importez la base de donnée dans votre PhpMyAdmin ```database/shifumi.sql```
 
