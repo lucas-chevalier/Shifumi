@@ -19,10 +19,11 @@ $_SESSION['token'] = $token;
 <input type="hidden" name="jetonCSRF" value="'.$token.'"> <!-- On stocke le jeton CSRF dans le formulaire en caché -->
 <?php
 require "./database/pdo.php";
-$_SESSION["nom"] = "jak";
+
 const PIERRE = 1; // Il serait préférable de remplacer 1 par 'pierre' pour améliorer la visibilité de ton code
 const CISEAUX = 2;
 const FEUILLE = 3;
+
 $nom = $_SESSION["nom"];
 $sth = $dbh->prepare("SELECT nombre_parties FROM utilisateurs WHERE nom = :nom;"); // J'ai remplacé ta requête par une requête préparée
 $sth->execute(['nom' => $nom]);
@@ -38,78 +39,75 @@ $sth = $dbh->prepare("SELECT score_hal FROM utilisateurs WHERE nom = :nom;");
 $sth->execute(['nom' => $nom]);
 $s_hal = $sth->fetchAll();
 list($score_hal) = $s_hal[0];
-echo $score_user;
 
 
-
-
-
-if ($_GET != NULL) { //Jeu du shifumi
-  
+if ($_POST != NULL) { //Jeu du shifumi
   require 'HAL.php';
   $rep_bot = $_SESSION['HAL'];
-  $rep_user = $_GET['rep'];
+  $rep_user = $_POST['choix_joueur'];
 
   if ($rep_user == 3 && $rep_bot == 1) {
-    ?>
-    Victoire
-    <?php
+    $_SESSION["result"] = "Victoire";
     $score_user = $score_user + 1;
   }  
   elseif ($rep_user < $rep_bot) {
-    ?>
-    Victoire
-    <?php
+    $_SESSION["result"] = "Victoire";
     $score_user = $score_user + 1;
   }
   elseif ($rep_user > $rep_bot) {
-    ?>
-    Défaite
-    <?php
+    $_SESSION["result"] = "Défaite";
     $score_hal = $score_hal + 1;
     
   }
   elseif ($rep_user == $rep_bot) {
-    ?>
-    Egalité
-    <?php
+    $_SESSION["result"] = "Egalité";
   }
   $nb_partie = $nb_partie + 1;
-  $statement = $dbh->prepare("UPDATE utilisateurs SET score_utilisateur = :score_utilisateur, score_hal = :score_hal, nombre_parties = :nombre_parties WHERE nom = ':nom'");
+  $statement = $dbh->prepare("UPDATE utilisateurs SET score_utilisateur = :score_utilisateur, score_hal = :score_hal, nombre_parties = :nombre_parties WHERE nom = :nom");
   $traitement = $statement->execute(['nom' => $nom, 'score_utilisateur' => $score_user, 'score_hal' => $score_hal, 'nombre_parties' => $nb_partie]);
   if(!$traitement) {
     var_dump($statement->errorInfo());
   }
 }
-  else {
+else {
   $_SESSION['nb_jeux'] = 0;
+  date_default_timezone_set('Europe/Paris');
+  $_SESSION["date"] = date('H:i:s');
+  $_SESSION["result"] = "test";
 }
-
-
-
-
 
 
 
 ?>
 <!-- Partie HTML -->
-    <form action="#" method="post" class="jeu_form"> <!-- Le contenu de mon formulaire -->
+    <header>
+            
+        <h1 class="jeu_h1">
+          <li><?= "Victoire : ", $score_user ?></li>
+          <li><?= "Début à ", $_SESSION["date"] ?></li>
+          <li><?= "Défaite : ", $score_hal ?></li>
+          
+        </h1>
+        <div class="jeu_result"><?= $_SESSION["result"] ?></div>
+    </header>
+
+    <form action="#" method="POST" class="jeu_form"> <!-- Le contenu de mon formulaire -->
       <div class="jeu_bouton">
-        <input type="radio" name="choix_joueur" value="pierre" id="pierre" class="jeu_input_radio">
+        <input type="radio" name="choix_joueur" value=1 id="pierre" class="jeu_input_radio">
         <br>
         <img src="images\fist.png" alt="Pierre" class="jeu_form_img"/>
         <br> <!-- Je me suis permis de remplacer ce que tu avais fait pour que ça colle avec le css -->
         <label for="pierre" class="jeu_label">Pierre</label>
       </div>
       <div class="jeu_bouton">
-        <input type="radio" name="choix_joueur" value="feuille" id="feuille" class="jeu_input_radio">
+        <input type="radio" name="choix_joueur" value=3 id="feuille" class="jeu_input_radio">
         <br>
         <img src="images\hand.png" alt="Feuille" class="jeu_form_img"/>
         <br>
         <label for="feuille" class="jeu_label">Feuille</label>
       </div>
       <div class="jeu_bouton">
-        <input type="radio" name="choix_joueur" value="ciseaux" id="ciseaux" class="jeu_input_radio">
+        <input type="radio" name="choix_joueur" value=2 id="ciseaux" class="jeu_input_radio">
         <br>
         <img src="images\scissors.png" alt="Ciseaux" class="jeu_form_img"/>
         <br>
@@ -119,3 +117,6 @@ if ($_GET != NULL) { //Jeu du shifumi
     </form>
   </div>
 </body>
+
+
+

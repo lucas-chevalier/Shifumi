@@ -93,3 +93,23 @@ button{
 .jeu_form_valider:hover{
   background-color: #0B5ED7;
 }
+.jeu_h1{
+  font-family: cursive;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  margin-top: 0.5%;
+  margin-left: 0.5%;
+  margin-right: 0.5%;
+}
+.jeu_result{
+  font-family: cursive;
+  text-align: center;
+  color: white;
+  margin-top: 0.5%;
+  margin-left: 0.5%;
+  margin-right: 0.5%;
+  font-size: 300%;
+  
+}
