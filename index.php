@@ -34,23 +34,19 @@ require './database/pdo.php'; // Inclusion du script qui fait la connexion à la
         <?php
         $token = bin2hex(random_bytes(32)); // Génère un jeton CSRF pour éviter les attaques CSRF
         session_start();
-        $nom = $_POST["nom"]; // Récupération du nom d'utilisateur
         $_SESSION['token'] = $token;
-        if (isset($nom)) { // Attends que le nom soit rempli avant d'éxecuter la suite
-            echo "boucle 1", $nom, $ip;
+        if (!empty($_POST)) { // Attends que le nom soit rempli avant d'éxecuter la suite
             if (!isset($_SESSION['token']) || !isset($_POST['token']) || $_SESSION['token'] !== $_POST['token']) { // Vérifie que l'utilisateur possède le bon jeton CSRF
                 die('Erreur: Jeton CSRF invalide');
-                echo "boucle 2", $nom, $ip;
+            } else {
+                $nom = $_POST["nom"]; // Récupération du nom d'utilisateur
             }
             if (preg_match('/^[a-zA-Z0-9]*$/', $nom)) { // Vérifie que le nom ne comporte pas de charactères spéciaux
                 $sth = $dbh->prepare("SELECT nom FROM utilisateurs WHERE nom = :nom"); // Préparation de la requête SQL qui regarde si le nom existe ou pas
                 $sth->execute(['nom' => $nom]);
-                $sth->setFetchAll(); // récupère le résultat de la requête et le stocke dans un tableau
                 $traitement = $sth->execute(); // Execution de la requête
-                echo "boucle 3", $nom, $ip;
                 if($traitement){
-                    $resultat->fetchAll(); // Récupère le résultat de la requête
-                    echo "boucle 4", $nom, $ip;
+                    $sth->fetchAll(); // Récupère le résultat de la requête
                 }
                 else { // En cas d'erreur on affiche les détails de pourquoi ça à planté et on en informe le client
                     print_r($sth->errorInfo());
@@ -61,7 +57,6 @@ require './database/pdo.php'; // Inclusion du script qui fait la connexion à la
                     $_SESSION = array();
                     $_SESSION["nom"] = $nom;
                     header('./jeu.php');
-                    echo "boucle 5", $nom, $ip;
                 } 
                 else {
                     $ip = $_SERVER['REMOTE_ADDR']; // Récupère l'adresse ip du client
@@ -70,7 +65,6 @@ require './database/pdo.php'; // Inclusion du script qui fait la connexion à la
                     if (!$traitement) { // En cas d'erreur on affiche les détails de pourquoi ça à planté et on en informe le client
                         print_r($sth->errorInfo());
                         ?><script>alert("Une erreur est survenue.")</script><?php
-                        echo "boucle 6", $nom, $ip;
                     }
                 }
                 print_r($sth->errorInfo());
