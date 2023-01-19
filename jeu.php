@@ -73,7 +73,7 @@ else {
   $_SESSION['nb_jeux'] = 0;
   date_default_timezone_set('Europe/Paris');
   $_SESSION["date"] = date('H:i:s');
-  $_SESSION["result"] = "test";
+  $_SESSION["result"] = "";
 }
 
 
