@@ -83,9 +83,9 @@ else {
     <header>
             
         <h1 class="jeu_h1">
-          <li><?= "Victoire : ", $score_user ?></li>
+          <li><?= "Victoires : ", $score_user ?></li>
           <li><?= "Début à ", $_SESSION["date"] ?></li>
-          <li><?= "Défaite : ", $score_hal ?></li>
+          <li><?= "Défaites : ", $score_hal ?></li>
           
         </h1>
         <div class="jeu_result"><?= $_SESSION["result"] ?></div>
