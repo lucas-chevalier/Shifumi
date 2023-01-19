@@ -12,6 +12,7 @@
 </head>
 <?php
 require './database/pdo.php'; // Inclusion du script qui fait la connexion à la bdd
+session_start();
 ?>
 <body class="shifumi_body">
     <header class="index_header"> <!-- header à ajouter dans le futur -->
@@ -23,7 +24,17 @@ require './database/pdo.php'; // Inclusion du script qui fait la connexion à la
             <p>Ce jeu vous est proposé par</p>
             <p>Kévin L, Lucas C, et Kean M.</p>
         </div>
+        <?php
+        if (!isset($_SESSION['token'])) {
+            $token = bin2hex(random_bytes(32)); // Génère un jeton CSRF pour éviter les attaques CSRF
+            $_SESSION['token'] = $token;
+        }
+        else {
+            $token = $_SESSION['token'];
+        }
+        ?>
         <form action="#" method="POST" class="index_form"> <!-- le formulaire avec le nom d'utilisateur (classes bizarres = bootstrap) -->
+        <input type="hidden" name="token" value="<?= $token; ?>"> <!-- On stocke le jeton CSRF dans le formulaire en caché -->
         <div class="mb-3">
             <label for="exampleInputEmail1" class="form-label">Nom d'utilisateur</label>
             <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="nom" require>
@@ -32,9 +43,6 @@ require './database/pdo.php'; // Inclusion du script qui fait la connexion à la
         </div>
         <!-- ------====== Partie PHP/SQL ======------ -->
         <?php
-        $token = bin2hex(random_bytes(32)); // Génère un jeton CSRF pour éviter les attaques CSRF
-        session_start();
-        $_SESSION['token'] = $token;
         if (!empty($_POST)) { // Attends que le nom soit rempli avant d'éxecuter la suite
             if (!isset($_SESSION['token']) || !isset($_POST['token']) || $_SESSION['token'] !== $_POST['token']) { // Vérifie que l'utilisateur possède le bon jeton CSRF
                 die('Erreur: Jeton CSRF invalide');
@@ -52,12 +60,12 @@ require './database/pdo.php'; // Inclusion du script qui fait la connexion à la
                     print_r($sth->errorInfo());
                     ?><script>alert("Une erreur est survenue.")</script><?php
                 }
-                if ($resultat->rowCount() >= 1) {
+                if ($sth->rowCount() >= 1) {
                     $_SESSION['nom'] = $nom;
                     $_SESSION = array();
                     $_SESSION["nom"] = $nom;
                     header('./jeu.php');
-                } 
+                }
                 else {
                     $ip = $_SERVER['REMOTE_ADDR']; // Récupère l'adresse ip du client
                     $sth = $dbh->prepare("INSERT INTO utilisateurs (nom, adresse_ip) VALUES(:nom, :adresse_ip);"); // Préparation de la requête SQL insérant le nom entré par l'utilisateur et son ip
@@ -65,6 +73,8 @@ require './database/pdo.php'; // Inclusion du script qui fait la connexion à la
                     if (!$traitement) { // En cas d'erreur on affiche les détails de pourquoi ça à planté et on en informe le client
                         print_r($sth->errorInfo());
                         ?><script>alert("Une erreur est survenue.")</script><?php
+                    } else {
+                        header('./jeu.php');
                     }
                 }
                 print_r($sth->errorInfo());
@@ -74,7 +84,6 @@ require './database/pdo.php'; // Inclusion du script qui fait la connexion à la
             }
         }
         ?>
-        <input type="hidden" name="jetonCSRF" value="'.$token.'"> <!-- On stocke le jeton CSRF dans le formulaire en caché -->
         </form>
         <div class="index_tableau_scores">
             <?php
@@ -92,7 +101,11 @@ require './database/pdo.php'; // Inclusion du script qui fait la connexion à la
                 </tr>
             <?php
             foreach($resultat as $tableau_scores){
-                $ratio_joueur = $tableau_scores['score_utilisateur']/$tableau_scores['nombre_parties'];
+                if ($tableau_scores['nombre_parties'] != 0) {
+                    $ratio_joueur = $tableau_scores['score_utilisateur']/$tableau_scores['nombre_parties'];
+                } else {
+                    $ratio_joueur = 0;
+                }
                 ?>
                 <tr>
                     <td><?= $i?></td>
