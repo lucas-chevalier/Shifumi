@@ -18,7 +18,7 @@ les languages : HTML5, CSS3, PHP, JavaScript, SQL
 
 Pour commencer, vous aurez besoin d'un serveur web (wamp/mamp/lamp etc...),
 
-Ensuite, importez la base de donnée dans votre PhpMyAdmin ```database/shifumi.sql```
+Ensuite, importez la base de données ```database/shifumi.sql```
 
 Enfin, modifiez les valeurs de **$hostname, $base_de_donnees, $user, et $password** dans ```database/pdo.php``` avec vos valeurs.
 
